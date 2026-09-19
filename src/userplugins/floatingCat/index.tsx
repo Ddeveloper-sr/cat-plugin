@@ -1,7 +1,8 @@
+import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { Devs } from "@utils/constants";
 
-const settings = {
+const settings = definePluginSettings({
     enabled: {
         type: OptionType.BOOLEAN,
         description: "Show the floating cat",
@@ -27,7 +28,7 @@ const settings = {
         description: "Automatically walk across the screen",
         default: true,
     },
-} as const;
+});
 
 let cat: HTMLDivElement | null = null;
 let timer: number | null = null;
@@ -39,7 +40,7 @@ let frame = 0;
 const frames = ["🐈", "😺", "🐈", "😸"];
 
 function createCat() {
-    if (cat || !settings.enabled.default) return;
+    if (cat || !settings.store.enabled) return;
 
     style = document.createElement("style");
     style.textContent = `
@@ -83,10 +84,10 @@ function createCat() {
     const face = cat.querySelector(".cat-face") as HTMLSpanElement;
 
     const update = () => {
-        const size = Math.max(32, Math.min(160, Number(settings.size.default) || 72));
+        const size = Math.max(32, Math.min(160, Number(settings.store.size) || 72));
         cat!.style.left = `${x}px`;
         cat!.style.fontSize = `${size}px`;
-        cat!.style.opacity = String(Math.max(.2, Math.min(1, Number(settings.opacity.default) || 1)));
+        cat!.style.opacity = String(Math.max(.2, Math.min(1, Number(settings.store.opacity) || 1)));
         face.textContent = frames[frame++ % frames.length];
         face.style.transform = `scaleX(${direction < 0 ? -1 : 1})`;
     };
@@ -116,14 +117,14 @@ function createCat() {
     update();
 
     timer = window.setInterval(() => {
-        if (!cat || dragging || !settings.autoWalk.default) {
+        if (!cat || dragging || !settings.store.autoWalk) {
             update();
             return;
         }
 
-        const size = Math.max(32, Math.min(160, Number(settings.size.default) || 72));
+        const size = Math.max(32, Math.min(160, Number(settings.store.size) || 72));
         const maxX = Math.max(0, window.innerWidth - size - 10);
-        x += direction * Math.max(.5, Number(settings.speed.default) || 1);
+        x += direction * Math.max(.5, Number(settings.store.speed) || 1);
 
         if (x >= maxX) {
             x = maxX;
@@ -151,10 +152,10 @@ function destroyCat() {
 export default definePlugin({
     name: "FloatingCat",
     description: "A draggable animated cat that walks across Discord.",
-    authors: [Devs.Vendicated],
+    authors: [{ name: "Scott", id: 0n }],
     settings,
     start() {
-        if (settings.enabled.default) createCat();
+        if (settings.store.enabled) createCat();
     },
     stop() {
         destroyCat();
