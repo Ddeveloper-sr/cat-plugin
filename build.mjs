@@ -18,7 +18,7 @@ const plugins = [
       const ext = extname(id);
       if (!extensions.includes(ext)) return null;
       const ts = ext.includes("ts");
-      const tsx = ts ? ext.endsWith("x") : undefined;
+      const tsx = ts ? true : undefined;
       const jsx = !ts ? ext.endsWith("x") : undefined;
 
       const result = await swc.transform(code, {
