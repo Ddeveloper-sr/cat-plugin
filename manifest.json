@@ -1,13 +1,7 @@
 {
   "name": "Floating Cat",
   "description": "A small animated cat that walks, sits, sleeps, and can be dragged around Discord.",
-  "authors": [
-    {
-      "name": "Scott"
-    }
-  ],
-  "main": "index.js",
-  "vendetta": {
-    "icon": "ic_furry"
-  }
+  "authors": [{ "name": "Scott" }],
+  "main": "src/index.ts",
+  "vendetta": { "icon": "ic_furry" }
 }
