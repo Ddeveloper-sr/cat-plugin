@@ -9,7 +9,12 @@
     "serve": "npx http-server dist -p 4040 -c-1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@swc/core": "^1.13.5",
     "esbuild": "^0.25.9",
+    "rollup": "^3.29.5",
+    "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.8.3"
   }
 }
