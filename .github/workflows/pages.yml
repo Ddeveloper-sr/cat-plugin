@@ -13,36 +13,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-publish:
+  publish:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build plugin
-        run: npm run build
-
-      - name: Verify plugin files
-        run: |
-          test -f dist/index.js
-          test -f dist/manifest.json
-          node -e "const m=require('./dist/manifest.json'); if(m.main!=='index.js') process.exit(1); console.log(m)"
-
-      - name: Publish plugin files to gh-pages
+      - name: Publish plugin source
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./dist
+          publish_dir: .
+          exclude_assets: ".git,.github,node_modules,dist"
           force_orphan: true
           enable_jekyll: false
