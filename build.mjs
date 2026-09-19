@@ -1,38 +1,23 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { extname } from "node:path";
 import { createHash } from "node:crypto";
 import { rollup } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import swc from "@swc/core";
-
-const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
 
 const plugins = [
   nodeResolve(),
   commonjs(),
-  {
-    name: "swc",
-    async transform(code, id) {
-      const ext = extname(id);
-      if (!extensions.includes(ext)) return null;
-      const ts = ext.includes("ts");
-      const tsx = ts ? true : undefined;
-      const jsx = !ts ? ext.endsWith("x") : undefined;
-
-      const result = await swc.transform(code, {
-        filename: id,
-        jsc: {
-          externalHelpers: true,
-          parser: { syntax: ts ? "typescript" : "ecmascript", tsx, jsx },
-        },
-        env: { targets: "defaults" },
-      });
-      return result.code;
+  esbuild({
+    minify: true,
+    loaders: {
+      ".ts": "tsx",
+      ".tsx": "tsx",
+      ".js": "js",
+      ".jsx": "jsx"
     },
-  },
-  esbuild({ minify: true }),
+    target: "es2020"
+  })
 ];
 
 const manifest = JSON.parse(await readFile("./manifest.json", "utf8"));
@@ -41,7 +26,11 @@ await mkdir("./dist", { recursive: true });
 const bundle = await rollup({
   input: `./${manifest.main}`,
   onwarn: () => {},
-  external: (id) => id.startsWith("@vendetta/") || id.startsWith("@metro/") || id === "react" || id === "react-native",
+  external: (id) =>
+    id.startsWith("@vendetta/") ||
+    id.startsWith("@metro/") ||
+    id === "react" ||
+    id === "react-native",
   plugins,
 });
 
