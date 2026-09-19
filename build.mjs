@@ -40,7 +40,7 @@ await bundle.write({
   compact: true,
   exports: "default",
   globals(id) {
-    if (id.startsWith("@vendetta/")) return id.substring(1).replace(/\\//g, ".");
+    if (id.startsWith("@vendetta/")) return id.substring(1).replace(/\//g, ".");
     if (id.startsWith("@metro/")) return id.substring(1).replace(/\\//g, ".");
     if (id === "react") return "window.React";
     if (id === "react-native") return "window.ReactNative";
