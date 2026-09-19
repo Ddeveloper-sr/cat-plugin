@@ -1,0 +1,15 @@
+{
+  "name": "floating-cat-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A draggable animated cat overlay for Kettu/Revenge Discord mobile clients.",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "serve": "npx http-server dist -p 4040 -c-1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.9",
+    "typescript": "^5.8.3"
+  }
+}
