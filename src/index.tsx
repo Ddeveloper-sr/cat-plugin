@@ -34,7 +34,7 @@ const save = () => Object.assign(storage, state);
 
 function Cat() {
   const [mode, setMode] = React.useState<Mode>("idle");
-  const [frame, setFrame] = React.useState(0);
+  const [frameIndex, setFrame] = React.useState(0);
   const position = React.useRef(new Animated.ValueXY({ x: state.x, y: state.y })).current;
   const dragOrigin = React.useRef({ x: state.x, y: state.y });
   const dragging = React.useRef(false);
@@ -97,7 +97,7 @@ function Cat() {
     });
   }, [mode]);
 
-  const frame = FRAMES[mode][frame % FRAMES[mode].length];
+  const frame = FRAMES[mode][frameIndex % FRAMES[mode].length];
 
   return (
     <Animated.View style={[styles.cat, { width: state.size, height: state.size + 24, opacity: state.opacity }, position.getLayout()]} {...responder.panHandlers}>
